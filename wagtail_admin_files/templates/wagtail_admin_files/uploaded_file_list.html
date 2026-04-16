@@ -1,0 +1,46 @@
+{% extends "wagtailadmin/generic/base.html" %}
+{% load static i18n wagtail_admin_files wagtailadmin_tags %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'wagtail_admin_files/css/waf.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+<script src="{% static 'wagtail_admin_files/js/waf-list.js' %}"></script>
+{% endblock %}
+
+{% block main_content %}
+
+    {% if object_list %}
+
+        {% block results %}
+
+            <div class="waf-uploaded-file-list" data-gap="32" data-columns="5" data-true-order="true">
+                {% trans "File Extension:" as ext_text %}
+
+                {% for object in object_list %}
+                    {% include "wagtail_admin_files/partials/uploaded_file.html" with object=object ext_text=ext_text %}
+                {% endfor %}
+
+            </div>
+
+        {% endblock %}
+        {% block pagination %}
+            {% if is_paginated %}
+                <div class="nice-padding">
+                    {% include "wagtailadmin/shared/pagination_nav.html" with items=page_obj linkurl=index_url %}
+                </div>
+            {% endif %}
+        {% endblock %}
+    {% else %}
+        <div class="nice-padding w-mt-8">
+            {% block no_results_message %}
+                <p>{{ no_results_message|capfirst }}</p>
+            {% endblock %}
+        </div>
+    {% endif %}
+
+{% endblock %}

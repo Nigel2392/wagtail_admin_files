@@ -1,0 +1,75 @@
+{% extends "wagtailadmin/generic/base.html" %}
+{% load static i18n wagtail_admin_files wagtailadmin_tags %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'wagtail_admin_files/css/waf.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+<script src="{% static 'wagtail_admin_files/js/waf-list.js' %}"></script>
+{% endblock %}
+
+{% block main_content %}
+
+    {% if object_list %}
+
+        {% block results %}
+
+            <div class="waf-uploaded-file-group-list">
+                {% trans "File Extension:" as ext_text %}
+                {% trans "Group's unique identifier" as id_text %}
+
+                {% for group in object_list %}
+                    <div class="waf-uploaded-file-group">
+                        <div class="waf-uploaded-file-group-header">
+                            <div class="waf-uploaded-file-group-name">
+                                <div data-controller="w-tooltip"
+                                    data-w-tooltip-content-value="{% trans "Unique Identifier for Group (Click to view details)" %}"
+                                    data-w-tooltip-placement-value="bottom-start">
+                                    {% url 'wagtail_admin_files:group_detail' group.id as url %} 
+                                    {% status label=group.id url=url title=id_text hidden_label=id_text classname="w-status--primary" %}
+                                </div>
+                            </div>
+                            <div class="waf-uploaded-file-group-meta">
+                                <div data-controller="w-tooltip"
+                                    data-w-tooltip-content-value="{% trans "Last uploaded date of files in this group" %}"
+                                    data-w-tooltip-placement-value="bottom">
+                                    {% blocktrans with date=group.latest_upload|date:"SHORT_DATETIME_FORMAT" %}Last uploaded: {{ date }}{% endblocktrans %}
+                                </div>
+                                <div data-controller="w-tooltip"
+                                    data-w-tooltip-content-value="{% trans "Number of files in this group" %}"
+                                    data-w-tooltip-placement-value="bottom">
+                                    {% blocktrans with file_count=group.file_count %}Files: {{ file_count }}{% endblocktrans %}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="waf-uploaded-file-list" data-gap="16" data-columns="5" data-true-order="false">
+                            {% for object in group.sharedfile_set.all %}
+                                {% include "wagtail_admin_files/partials/uploaded_file.html" with object=object ext_text=ext_text %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% endblock %}
+        {% block pagination %}
+            {% if is_paginated %}
+                <div class="nice-padding">
+                    {% include "wagtailadmin/shared/pagination_nav.html" with items=page_obj linkurl=index_url %}
+                </div>
+            {% endif %}
+        {% endblock %}
+    {% else %}
+        <div class="nice-padding w-mt-8">
+            {% block no_results_message %}
+                <p>{{ no_results_message|capfirst }}</p>
+            {% endblock %}
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,15 @@
+name: wagtail_admin_files
+context:
+    description: This is a python project template
+    versionMapping:
+        doccer.yaml: version:(\S+(?:(\d+)\.)?(?:(\d+)\.)?(\*|\d+))
+        setup.cfg: ((?:(\d+)\.)?(?:(\d+)\.)?(\*|\\d+))
+beforeCopy: null
+afterCopy: null
+commands: {}
+delimLeft: '@{'
+delimRight: '}'
+exclude:
+    - '*node_modules*'
+    - '*dist*'
+    - ./.git

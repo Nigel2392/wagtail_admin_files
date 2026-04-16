@@ -1,0 +1,49 @@
+{% extends "wagtailadmin/generic/base.html" %}
+{% load static i18n wagtailadmin_tags %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'wagtail_admin_files/css/waf.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'wagtail_admin_files/js/waf-detail.js' %}"></script>
+{% endblock %}
+
+{% block main_content %}
+
+<div class="waf-content w-form-width" data-controller="waf-clipboard" data-waf-clipboard-success-content-value="{% trans "Copied!" %}">
+    {% trans "Copy the Link" as header_title_text %}
+    {% trans "to share your file with others" as page_subtitle %}
+    {% include "wagtailadmin/shared/header.html" with title=header_title_text subtitle=page_subtitle icon="link" only %}
+    
+    {% help_block status="info" icon="info" %}
+        <p>
+            {% blocktrans trimmed %}
+                Easily copy the below share URL to share your file with others
+            {% endblocktrans %}
+        </p>
+    {% endhelp_block %}
+
+    <div class="waf-upload-success">
+        <input type="text" class="waf-upload-success-url" value="{{ share_url }}" readonly data-waf-clipboard-target="source">
+    </div>
+
+    <div class="buttons">
+        <a href="{{ share_url }}" target="_blank" class="button button--primary">
+            {% if grouped %}
+                {% trans "View File Group Details" %}
+            {% else %}
+                {% trans "View File Details" %}
+            {% endif %}
+        </a>
+
+        <button class="button button--primary" data-waf-clipboard-target="button" data-action="waf-clipboard#copy">
+            {% trans "Copy Link" %}
+        </button>
+    </div>
+</div>
+
+{% endblock %}
+

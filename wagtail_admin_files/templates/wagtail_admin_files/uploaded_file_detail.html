@@ -1,0 +1,93 @@
+{% extends "wagtailadmin/generic/base.html" %}
+{% load static i18n wagtailadmin_tags wagtail_admin_files %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'wagtail_admin_files/css/waf.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'wagtail_admin_files/js/waf-detail.js' %}"></script>
+{% endblock %}
+
+{% block main_content %}
+    {% if sharing %}
+        {% help_block status="info" %}
+            <p>
+                {% blocktrans trimmed %}
+                    Viewing a shared file.
+                {% endblocktrans %}
+            </p>
+        {% endhelp_block %}
+    {% else %}
+        {% trans "Copy the Link" as header_title_text %}
+        {% trans "to share your file with others" as page_subtitle %}
+        {% include "wagtailadmin/shared/header.html" with title=header_title_text subtitle=page_subtitle icon="link" only %}
+    {% endif %}
+
+<div class="waf-content waf-file-detail">
+    <div class="waf-detail-file-container">
+        <div class="waf-detail-file-preview">
+            <div class="waf-file-ext-tooltip">
+                {% status label=rendered_object.ext.upper url=rendered_object.url title=ext_text hidden_label=ext_text classname="w-status--primary" %}
+            </div>
+
+            {% render_file object as rendered_object %}
+            {{ rendered_object.html }}
+        </div>
+    </div>
+
+    {% if not sharing %}
+        <div class="waf-detail-file-meta">
+            {% help_block status="info" icon="info" %}
+                <p>
+                    {% blocktrans trimmed %}
+                        Easily copy the below share URL to share your file with others
+                    {% endblocktrans %}
+                </p>
+            {% endhelp_block %}
+            
+            <div class="waf-upload-success-container" data-controller="waf-clipboard" data-waf-clipboard-success-content-value="{% trans "Copied!" %}">
+                <h1>{% trans "File Share Link" %}</h1>
+                <div class="waf-upload-success">
+                    <input type="text" class="waf-upload-success-url" value="{{ share_url }}" readonly data-waf-clipboard-target="source">
+                </div>
+                <div class="buttons">
+                    <button class="button button--primary" data-waf-clipboard-target="button" data-action="waf-clipboard#copy">
+                        {% trans "Copy Link" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% if not sharing %}
+    {% block footer %}
+        <footer class="footer w-grid md:w-grid-flow-col">
+            <nav class="actions actions--primary footer__container" aria-label="{% trans 'Actions' %}">
+                {% block actions %}
+                    {% fragment as main_action %}
+                        {% block main_action %}
+                            {% if object.group_id %}
+                                <a href="{% url 'wagtail_admin_files:group_detail' object.group_id %}" class="button warning">
+                                    {% trans "View Group Details" %}
+                                </a>
+                            {% else %}
+                                <a href="{% url 'wagtail_admin_files:list' %}" class="button warning">
+                                    {% trans "Back to List" %}
+                                </a>
+                            {% endif %}
+                        {% endblock %}
+                    {% endfragment %}
+
+                    {% include "wagtailadmin/shared/action_menu/menu.html" with show_menu=extra_actions default_menu_item=main_action menu_items_fragment=extra_actions %}
+                {% endblock %}
+            </nav>
+        </footer>
+    {% endblock %}
+{% endif %}
+
+{% endblock %}
+
