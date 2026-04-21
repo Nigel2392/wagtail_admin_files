@@ -252,6 +252,7 @@
     border-radius: 0.5rem;
     border: 1px dotted var(--waf-lightest);
     overflow: hidden;
+    position: relative;
 }
 .waf-detail-file-preview {
     max-width: 100%;

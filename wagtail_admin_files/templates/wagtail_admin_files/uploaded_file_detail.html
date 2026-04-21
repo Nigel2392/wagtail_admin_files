@@ -29,11 +29,13 @@
 <div class="waf-content waf-file-detail">
     <div class="waf-detail-file-container">
         <div class="waf-detail-file-preview">
+            {% render_file object as rendered_object %}
             <div class="waf-file-ext-tooltip">
                 {% status label=rendered_object.ext.upper url=rendered_object.url title=ext_text hidden_label=ext_text classname="w-status--primary" %}
             </div>
+            
+            {% include "wagtail_admin_files/partials/file_toolbar.html" %}
 
-            {% render_file object as rendered_object %}
             {{ rendered_object.html }}
         </div>
     </div>
