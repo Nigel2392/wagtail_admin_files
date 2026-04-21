@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from wagtail.admin.menu import MenuItem
 from wagtail import hooks
 
+from .settings import WAGTAIL_ADMIN_FILES_MENU_HOOK
 from .models import SharedFile
 from .views import (
     SharedFileGroupListView,
@@ -37,7 +38,7 @@ def register_admin_permissions():
         "view_sharedfile",
     ])
 
-@hooks.register(getattr(settings, "WAGTAIL_ADMIN_FILES_MENU_HOOK", "register_settings_menu_item"))
+@hooks.register(WAGTAIL_ADMIN_FILES_MENU_HOOK)
 def register_admin_files_menu_item():
     return MenuItem(
         label=_("Shared Files"),

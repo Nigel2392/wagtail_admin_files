@@ -1,0 +1,43 @@
+{% extends TEMPLATE_EXTENDS %}
+
+{% load static wagtail_admin_files i18n %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'wagtail_admin_files/css/waf-public.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'wagtail_admin_files/js/waf-print-buttons.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="waf-header">
+        <h1>{% trans "File Detail" %}</h1>
+    </div>
+
+    <div class="waf-container">
+        {% render_file object as rendered_object %}
+        <div class="waf-detail-file grouped" data-group-id="{{ object.group_id|default:"" }}">
+            <div class="waf-file-ext-tooltip">
+                <a href="{{ rendered_object.url }}">{{ rendered_object.ext.upper }}</a>
+            </div>
+        
+            {% include "wagtail_admin_files/partials/file_toolbar.html" %}
+        
+            <div class="waf-detail-file-preview">
+                {{ rendered_object.html }}
+            </div>
+        
+            <div class="waf-detail-file-meta">
+                <a href="{% url 'wagtail_admin_files:detail' object.pk %}">
+                    <h3 class="waf-detail-file-title">{{ object.title }}</h3>
+                </a>
+                <p class="waf-detail-file-date">{{ object.uploaded_at|date:"SHORT_DATETIME_FORMAT" }}</p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

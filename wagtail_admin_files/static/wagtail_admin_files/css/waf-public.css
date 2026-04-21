@@ -1,0 +1,142 @@
+:root {
+    --waf-lightest: #ccc;
+    --waf-light: #666;
+    --waf-dark: #333;
+    --waf-light-green: #7c9b79;
+    --waf-red: #ff4d4d;
+}
+
+/* HEADER */
+.waf-header {
+    padding: 1rem;
+    border: 1px dashed var(--waf-light);
+    margin-bottom: 1rem;
+    font-family: sans-serif;
+    padding-top: 2em;
+    padding-bottom:2rem;
+}
+.waf-header h1 {
+    letter-spacing: 0.08em;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* CONTAINER */
+.waf-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width: 1200px) {
+    .waf-container {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+}
+
+/* DETAIL PAGE */
+.waf-detail-file {
+    --max-width-var: var(--waf-max-width, max(60%, 400px));
+    position: relative;
+    display: inline-block;
+    max-width: var(--max-width-var);
+    border: 2px dotted var(--waf-lightest);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+.waf-detail-file-preview {
+    padding: 1rem;
+    border-bottom: 1px dotted var(--waf-lightest);
+}
+.waf-detail-file-preview > * {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+.waf-detail-file-meta {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.9rem;
+    word-break: break-all;
+    color: var(--waf-light);
+    font-family: sans-serif;
+}
+.waf-detail-file-meta a {
+    color: var(--waf-dark);
+    text-decoration: none;
+}
+.waf-detail-file-meta .waf-detail-file-title,
+.waf-detail-file-meta p {
+    margin: 0;
+}
+.waf-detail-file-title {
+    font-weight: bold;
+}
+
+/* GROUP DETAIL PAGE */
+.waf-uploaded-file-group-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    gap: 0.5rem;
+}
+.waf-file-detail {
+    position: relative;
+    display: inline-block;
+    max-width: 20rem;
+    border: 2px dotted var(--waf-lightest);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* EXTENSION TAG */
+.waf-file-ext-tooltip {
+    position: absolute;
+    top: 0.25rem;
+    left: 0.1rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 0.2rem;
+    color: var(--waf-dark);
+    background-color: var(--waf-lightest);
+    border: 1px solid var(--waf-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.waf-file-ext-tooltip a {
+    font-family: monospace;
+    color: var(--waf-dark);
+    text-decoration: none;
+}
+
+/* TOOLBAR */
+.waf-file-toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0 0 0 0.25rem;
+    overflow: hidden;
+}
+.waf-file-toolbar-button {
+    background: var(--waf-lightest);
+    color: var(--waf-dark);
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    aspect-ratio: 1;
+    height: 100%;
+    transition: background 0.3s ease;
+}
+.waf-file-toolbar-button:hover {
+    background: var(--waf-lightest);
+    color: var(--waf-dark);
+}

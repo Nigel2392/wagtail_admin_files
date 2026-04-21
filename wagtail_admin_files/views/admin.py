@@ -1,5 +1,4 @@
 import logging
-from urllib.parse import urlencode
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -23,8 +22,9 @@ else:
 
 from wagtail.admin import messages
 
-from .models import SharedFile, SharedFileGroup
-from .forms import (
+from ..settings import WAGTAIL_ADMIN_FILES_ALLOW_PUBLIC
+from ..models import SharedFile, SharedFileGroup
+from ..forms import (
     SharedFileFormSet,
 )
 
@@ -34,11 +34,12 @@ logging = logging.getLogger(__name__)
 # Create your views here.
 @xframe_options_sameorigin
 def serve_shared_pdf(request, pk):
-    if not request.user.is_authenticated:
-        return Http404
-
-    if not request.user.has_perm("wagtail_admin_files.view_sharedfile"):
-        return Http404
+    if not WAGTAIL_ADMIN_FILES_ALLOW_PUBLIC:
+        if not request.user.is_authenticated:
+            return Http404
+    
+        if not request.user.has_perm("wagtail_admin_files.view_sharedfile"):
+            return Http404
 
     object = get_object_or_404(SharedFile, pk=pk)
     if not object.file.name.lower().endswith(".pdf"):
@@ -67,6 +68,11 @@ class SharedFileView(SharedFileMixin, TemplateView):
     header_icon = "doc-empty"
     page_title = _("Shared File Details")
     template_name = "wagtail_admin_files/uploaded_file_detail.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if WAGTAIL_ADMIN_FILES_ALLOW_PUBLIC and request.GET.get("shared", "false").lower() == "true":
+            return redirect(reverse("wagtail_public_files:detail", args=[self.kwargs["pk"]]))
+        return super().dispatch(request, *args, **kwargs)
 
     def get_breadcrumbs_items(self):
         items = super().get_breadcrumbs_items().copy()
@@ -221,6 +227,11 @@ class SharedFileGroupDetailView(SharedFileMixin, TemplateView):
     header_icon = "folder"
     page_title = _("File Group Details")
     template_name = "wagtail_admin_files/uploaded_file_group_detail.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if WAGTAIL_ADMIN_FILES_ALLOW_PUBLIC and request.GET.get("shared", "false").lower() == "true":
+            return redirect(reverse("wagtail_public_files:group_detail", args=[self.kwargs["group"]]))
+        return super().dispatch(request, *args, **kwargs)
 
     def get_breadcrumbs_items(self):
         items = super().get_breadcrumbs_items().copy()

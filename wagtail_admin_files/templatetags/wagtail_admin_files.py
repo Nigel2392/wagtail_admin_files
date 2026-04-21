@@ -5,9 +5,11 @@ from django.utils.safestring import mark_safe
 from django.templatetags.static import static
 from urllib.parse import quote, urljoin
 
-from ..models import SharedFile
+from ..models import SharedFile, SharedFileGroup
+
 
 register = Library()
+
 
 @register.simple_tag(name="render_file", takes_context=True)
 def render_file(context, file: SharedFile, attrs_str=""):
@@ -15,9 +17,10 @@ def render_file(context, file: SharedFile, attrs_str=""):
         request = context["request"]
         base_url = request.build_absolute_uri("/")
     else:
-        base_url = getattr(settings, "WAGTAILADMIN_BASE_URL")
+        base_url = getattr(settings, "WAGTAILADMIN_BASE_URL", getattr(settings, "WAGTAIL_ADMIN_FILES_BASE_URL"))
 
     return _render_file(file, attrs_str, base_url=base_url)
+
 
 def _render_file(file: SharedFile, attrs_str="", base_url=""):
     name_parts = file.file.name.rsplit(".", 1)

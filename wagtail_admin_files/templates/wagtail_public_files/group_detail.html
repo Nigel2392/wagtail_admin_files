@@ -1,0 +1,56 @@
+{% extends TEMPLATE_EXTENDS %}
+
+{% load static wagtail_admin_files i18n %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'wagtail_admin_files/css/waf-public.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+<script src="{% static 'wagtail_admin_files/js/waf-print-buttons.js' %}"></script>
+<script src="{% static 'wagtail_admin_files/js/waf-list.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="waf-group-detail">
+
+        <div class="waf-header">
+            <h1>{% blocktrans with file_count=file_count %}Group Detail ({{ file_count }}){% endblocktrans %}</h1>
+            <h2>{% blocktrans with last_upload_date=latest_upload|date:"SHORT_DATETIME_FORMAT" %}Last Upload Date: {{ last_upload_date }}{% endblocktrans %}</h2>
+        </div>
+
+        <div class="waf-container">
+            <div class="waf-uploaded-file-list" data-gap="16" data-columns="5" data-true-order="false">
+                {% for object in object.sharedfile_set.all %}
+            
+                    {% render_file object as rendered_object %}
+                    <div class="waf-file-detail" data-group-id="{{ object.group_id|default:"" }}">
+                        <div class="waf-file-ext-tooltip">
+                            <a href="{{ rendered_object.url }}">{{ rendered_object.ext.upper }}</a>
+                        </div>
+                    
+                        {% include "wagtail_admin_files/partials/file_toolbar.html" %}
+                    
+                        <div class="waf-detail-file-preview">
+                            {{ rendered_object.html }}
+                        </div>
+                    
+                        <div class="waf-detail-file-meta">
+                            <a href="{% url 'wagtail_admin_files:detail' object.pk %}">
+                                <h3 class="waf-detail-file-title">{{ object.title }}</h3>
+                            </a>
+                            <p class="waf-detail-file-date">{{ object.uploaded_at|date:"SHORT_DATETIME_FORMAT" }}</p>
+                        </div>
+                    </div>
+                
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

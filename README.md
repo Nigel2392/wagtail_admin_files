@@ -32,9 +32,18 @@ Quick start
    X_FRAME_OPTIONS = "SAMEORIGIN"
    ```
 
-
 A settings menu item will be automatically registered.
 
 The `WAGTAIL_ADMIN_FILES_MENU_HOOK` setting can be set to register the menu item to a different menu.
 
 By default, the hook it registers to is `register_settings_menu_item`
+
+## Public Views
+
+Public views are available, but can be disabled by setting `WAGTAIL_ADMIN_FILES_ALLOW_PUBLIC` to `False` in `settings.py`.
+
+In this case, the admin will take over, all public views will return a 404 status code.
+
+The public views extend `base.html` by default, this can be overridden by setting `WAGTAIL_ADMIN_FILES_TEMPLATE_EXTENDS` in `settings.py` to point to a different file.
+
+The public views use the generic `{% block content %}...{% endblock content %}` in order to override the content block of the above mentioned ``WAGTAIL_ADMIN_FILES_TEMPLATE_EXTENDS`` file.
