@@ -25,6 +25,9 @@
 .waf-content .buttons {
     margin-top: 1rem;
 }
+.waf-button-full {
+    width: 100%;
+}
 .waf-uploaded-file-list {
     display: block;
     margin-top: 1rem;

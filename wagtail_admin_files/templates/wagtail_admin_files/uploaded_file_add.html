@@ -73,7 +73,7 @@
                         <button
                             type="submit"
                             form="file-upload-form"
-                            class="button button-longrunning"
+                            class="waf-button-full button button-longrunning"
                             data-controller="w-progress w-kbd"
                             data-action="w-progress#activate"
                             data-w-kbd-key-value="mod+s"
@@ -85,13 +85,19 @@
                         </button>
                     {% endblock %}
                 {% endfragment %}
-
-                {% include "wagtailadmin/shared/action_menu/menu.html" with show_menu=extra_actions default_menu_item=main_action menu_items_fragment=extra_actions %}
+                    
+                {% if WAGTAIL_VERSION >= 6 %}
+                    {% include "wagtailadmin/shared/action_menu/menu.html" with show_menu=extra_actions default_menu_item=main_action menu_items_fragment=extra_actions %}
+                {% else %}
+                    {{ main_action }}
+                {% endif %}
             {% endblock %}
         </nav>
-        {% block unsaved_changes_warning %}
-            {% include "wagtailadmin/shared/unsaved_changes_warning.html" %}
-        {% endblock %}
+        {% if WAGTAIL_VERSION >= 6 %}
+            {% block unsaved_changes_warning %}
+                {% include "wagtailadmin/shared/unsaved_changes_warning.html" %}
+            {% endblock %}
+        {% endif %}
     </footer>
 {% endblock %}
 

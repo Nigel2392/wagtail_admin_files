@@ -14,6 +14,17 @@
 
 {% block main_content %}
 
+    {% if WAGTAIL_VERSION < 6 %}
+        <div class="buttons">
+            <a href="{% url 'wagtail_admin_files:add' %}" class="button button-primary">
+                {% trans "Upload new file" %}
+            </a>
+            <a href="{% url 'wagtail_admin_files:list_groups' %}" class="button">
+                {% trans "View Groups" %}
+            </a>
+        </div>
+    {% endif %}
+
     {% if object_list %}
 
         {% block results %}

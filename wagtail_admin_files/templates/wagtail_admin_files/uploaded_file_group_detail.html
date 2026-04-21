@@ -58,13 +58,17 @@
                 {% block actions %}
                     {% fragment as main_action %}
                         {% block main_action %}
-                            <a href="{% url 'wagtail_admin_files:list' %}" class="button warning">
+                            <a href="{% url 'wagtail_admin_files:list' %}" class="waf-button-full button warning">
                                 {% trans "Back to List" %}
                             </a>
                         {% endblock %}
                     {% endfragment %}
 
-                    {% include "wagtailadmin/shared/action_menu/menu.html" with show_menu=extra_actions default_menu_item=main_action menu_items_fragment=extra_actions %}
+                    {% if WAGTAIL_VERSION >= 6 %}
+                        {% include "wagtailadmin/shared/action_menu/menu.html" with show_menu=extra_actions default_menu_item=main_action menu_items_fragment=extra_actions %}
+                    {% else %}
+                        {{ main_action }}
+                    {% endif %}
                 {% endblock %}
             </nav>
         </footer>

@@ -9,8 +9,17 @@ from django.views.generic import TemplateView
 from django.views.generic.list import BaseListView
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from wagtail.admin.views.generic.base import WagtailAdminTemplateMixin
-from wagtail.admin.paginator import WagtailPaginator
-from wagtail.admin.widgets.button import HeaderButton
+from wagtail import VERSION as WAGTAIL_VERSION
+
+if WAGTAIL_VERSION >= (7, 0):
+    from wagtail.admin.paginator import WagtailPaginator as Paginator
+else:
+    from django.core.paginator import Paginator
+
+if WAGTAIL_VERSION >= (6, 0):
+    from wagtail.admin.widgets.button import HeaderButton
+else:
+    from wagtail.admin.widgets.button import Button as HeaderButton
 
 from wagtail.admin import messages
 
@@ -18,6 +27,7 @@ from .models import SharedFile, SharedFileGroup
 from .forms import (
     SharedFileFormSet,
 )
+
 
 logging = logging.getLogger(__name__)
 
@@ -46,6 +56,11 @@ class SharedFileMixin(WagtailAdminTemplateMixin):
             return Http404
 
         return super().dispatch(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs) | {
+            "WAGTAIL_VERSION": WAGTAIL_VERSION[0],
+        }
 
 
 class SharedFileView(SharedFileMixin, TemplateView):
@@ -165,7 +180,7 @@ class SharedFileAddView(SharedFileMixin, TemplateView):
 class SharedFileListView(SharedFileMixin, BaseListView, TemplateView):
     model = SharedFile
     paginate_by = 20
-    paginator_class = WagtailPaginator
+    paginator_class = Paginator
     ordering = "-uploaded_at"
     header_icon = "desktop"
     page_title = _("Shared Files")
@@ -238,7 +253,7 @@ class SharedFileGroupDetailView(SharedFileMixin, TemplateView):
 class SharedFileGroupListView(SharedFileMixin, BaseListView, TemplateView):
     model = SharedFileGroup
     paginate_by = 20
-    paginator_class = WagtailPaginator
+    paginator_class = Paginator
     header_icon = "folder"
     page_title = _("Groups of Files")
     template_name = "wagtail_admin_files/uploaded_file_group_list.html"
