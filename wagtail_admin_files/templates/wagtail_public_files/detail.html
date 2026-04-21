@@ -33,7 +33,7 @@
                 </div>
             
                 <div class="waf-detail-file-meta">
-                    <a href="{% url 'wagtail_admin_files:detail' object.pk %}">
+                    <a href="{{ rendered_object.url }}">
                         <h3 class="waf-detail-file-title">{{ object.title }}</h3>
                     </a>
                     <p class="waf-detail-file-date">{{ object.uploaded_at|date:"SHORT_DATETIME_FORMAT" }}</p>
